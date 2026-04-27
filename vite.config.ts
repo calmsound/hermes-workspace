@@ -444,7 +444,15 @@ const config = defineConfig(({ mode, command }) => {
       host: '0.0.0.0',
       port: 3002,
       strictPort: false, // allow fallback if 3002 is taken, but log clearly
-      allowedHosts: true,
+      allowedHosts: env.HERMES_ALLOWED_HOSTS?.trim()
+          ? env.HERMES_ALLOWED_HOSTS.split(',').map((h) => h.trim()).filter(Boolean)
+          : [
+              'nathan-hermes-workspace.zeabur.app',
+              'localhost',
+              '127.0.0.1',
+              '.ts.net', // Tailscale
+            ],
+
       watch: {
         // Exclude generated route tree — TanStack Router's file watcher
         // detects its own output as a change → infinite regeneration loop
